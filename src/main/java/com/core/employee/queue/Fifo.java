@@ -22,6 +22,7 @@ public class Fifo<T> implements Queue<T> {
             tail.next = newNode;
             tail = newNode;
         }
+        size++;
     }
 
     @Override
