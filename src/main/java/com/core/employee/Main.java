@@ -4,41 +4,7 @@ import com.core.employee.queue.Fifo;
 import com.core.employee.interfaces.Queue;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
-
-/**
- * Escreva um programa que permita implementar uma lista Fifo duplamente encadeada.
- * Cada nodo da lista terá 4 campos:
- * - 1 Armazenar Matricula
- * - 1 Armazenar Idade
- * - 2 Armazenar endereço dos nodos vizinhos
- * <p>
- * O programa deve apresentar o seguinte Menu:
- * 1 - enqueue
- * 2 - dequeue
- * 3 - mostrar
- * 4 - mostrar invertido
- * 5 - procurar
- * 6 - cabeça
- * 7 - cauda
- * 8 - media
- * 9 - vazar
- * <p>
- * Se a opção 1 for selecionada, o programa pede os dados do funcionário e insere-o na lista e retorna para o menu
- * Se a opção 2 for selecionada, o programa retira um funcionário, mostra a matricula e retorna para o menu
- * Se a opção 3 for selecionada, o programa mostra as matriculas cadastradas e retorna para o menu
- * Se a opção 4 for selecionada, o programa mostra as matriculas na ordem inversa da Fifo e retorna para o menu
- * Se a opção 5 for selecionada, o programa pede um numero de matricula, mostra a idade do funcionário e retorna para o menu
- * Se a opção 6 for selecionada, o programa mostra a matricula do funcionário que esta na cabeça da fila e retorna para o menu
- * Se a opção 7 for selecionada, o programa mostra a matricula do funcionário que esta no fim da fila e retorna para o menu
- * Se a opção 8 for selecionada, o programa mostra a media de idade dos funcionários e retorna para o menu
- * Se a opção 9 for selecionada, fecha o programa
- * <p>
- * Observações:
- * - Para cada opção do menu construa um método especifico
- * - Somente os métodos correspondente as opções 3 e 4 do menu, além do método main, podem fazer I/O
- */
 
 public class Main {
     private static void exibirMenu() {
@@ -58,7 +24,7 @@ public class Main {
         Queue<Employee> queue = new Fifo<Employee>();
         Scanner scanner = new Scanner(System.in);
         boolean running = true;
-        Employee employee = null;
+        Employee employee;
         Queue<Employee> cloneQueue;
 
         System.out.println("--- Sistema de Gerenciamento de Funcionários (FIFO) ---");
@@ -75,7 +41,6 @@ public class Main {
                         String registration = scanner.nextLine();
                         System.out.print("Digite a idade: ");
                         int age = Integer.parseInt(scanner.nextLine());
-
                         queue.enqueue(new Employee(age, registration));
                         System.out.println("Funcionário adicionado com sucesso!");
                         break;
@@ -106,31 +71,40 @@ public class Main {
                             System.out.println("A fila está vazia.");
                         } else {
                             System.out.println("--- Matrículas na Ordem Inversa ---");
-//                            Employee[] employees = new Employee[queue.size()];
                             ArrayList<Employee> employees = new ArrayList<>();
-                            for (int i = 0; i <= (queue.size() - 1); i++) {
+                            while (!queue.isEmpty()) {
                                 employees.add(queue.dequeue());
                             }
                             for (int i = employees.size() - 1; i >= 0; i--) {
-                                System.out.println("Matrícula: " + employees.get(i).registration);
+                                employee = employees.get(i);
+                                System.out.println("Matrícula: " + employee.registration);
+                                queue.enqueue(employee);
                             }
                         }
                         break;
                     case 5:
-                        System.out.print("Digite a matrícula a ser buscada: ");
-                        String registrationToSearch = scanner.nextLine();
-                        boolean isFinded = false;
-                        int decounter = queue.size();
-                        while (!isFinded && decounter > 0) {
-                            employee = queue.dequeue();
-                            isFinded = employee.registration.equals(registrationToSearch);
-                            decounter--;
-                        }
-                        if (!isFinded) {
-                            assert employee != null;
-                            System.out.println("Idade do funcionário: " + employee.age);
+                        if (queue.isEmpty()) {
+                            System.out.println("A fila está vazia. Não é possível buscar funcionários.");
                         } else {
-                            System.out.println("Funcionário com a matrícula " + registrationToSearch + " não encontrado.");
+                            System.out.print("Digite a matrícula a ser buscada: ");
+                            String registrationToSearch = scanner.nextLine();
+                            cloneQueue = new Fifo<Employee>();
+                            Employee foundEmployee = null;
+
+                            while (!queue.isEmpty()) {
+                                employee = queue.dequeue();
+                                cloneQueue.enqueue(employee);
+                                if (employee.registration.equals(registrationToSearch)) {
+                                    foundEmployee = employee;
+                                }
+                            }
+                            queue = cloneQueue;
+
+                            if (foundEmployee != null) {
+                                System.out.println("Idade do funcionário: " + foundEmployee.age);
+                            } else {
+                                System.out.println("Funcionário com a matrícula " + registrationToSearch + " não encontrado.");
+                            }
                         }
                         break;
                     case 6:
@@ -153,13 +127,14 @@ public class Main {
                         } else {
                             cloneQueue = new Fifo<Employee>();
                             Integer totalAge = 0;
-                            for (int i = 0; i <= queue.size(); i++) {
+                            int initialSize = queue.size();
+                            while (!queue.isEmpty()) {
                                 employee = queue.dequeue();
                                 cloneQueue.enqueue(employee);
                                 totalAge += employee.age;
                             }
                             queue = cloneQueue;
-                            Double avarageAge = (double) totalAge / queue.size();
+                            Double avarageAge = (double) totalAge / initialSize;
                             System.out.printf("A média de idade dos funcionários é: %.2f\n", avarageAge);
                         }
                         break;
