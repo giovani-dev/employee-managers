@@ -1,0 +1,31 @@
+package com.employee.enums;
+
+public enum StateEnum {
+    AC,
+    AP,
+    AM,
+    PA,
+    RO,
+    RR,
+    TO,
+    AL,
+    BA,
+    CE,
+    MA,
+    PB,
+    PE,
+    PI,
+    RN,
+    SE,
+    GO,
+    MT,
+    MS,
+    DF,
+    ES,
+    MG,
+    RJ,
+    SP,
+    PR,
+    RS,
+    SC
+}
