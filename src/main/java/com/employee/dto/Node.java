@@ -1,4 +1,4 @@
-package com.core.employee.queue;
+package com.employee.dto;
 
 public class Node<T> {
     public Node<T> next;
