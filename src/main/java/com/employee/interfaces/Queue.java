@@ -1,11 +1,11 @@
-package com.core.employee.interfaces;
+package com.employee.interfaces;
 
 public interface Queue<T> {
     void enqueue(T element);
 
     T dequeue();
 
-    int size();
+    int getSize();
 
     void clear();
 
@@ -13,7 +13,7 @@ public interface Queue<T> {
 
     boolean isFull();
 
-    T head();
+    T getHead();
 
-    T tail();
+    T getTail();
 }
